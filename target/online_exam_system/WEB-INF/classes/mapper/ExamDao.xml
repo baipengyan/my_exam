@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.dao.ExamDao">
+
+    <resultMap type="com.exam.entity.Exam" id="ExamMap">
+        <result property="examId" column="exam_id"/>
+        <result property="examName" column="exam_name"/>
+        <result property="examStartDate" column="exam_start_date"/>
+        <result property="examLastTime" column="exam_last_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createDate" column="create_date"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateDate" column="update_date"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="ExamMap">
+        select
+          exam_id, exam_name, exam_start_date, exam_last_time, create_by, create_date, update_by, update_date,reviewer_id
+        from exam
+        where exam_id = #{examId}
+    </select>
+
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="ExamMap">
+        select
+        exam_id, exam_name, exam_start_date, exam_last_time, create_by, create_date, update_by,
+        update_date,reviewer_id,score
+        from exam
+        <where>
+            <if test="examName != null and examName != ''">
+                and exam_name = #{examName}
+            </if>
+            <if test="createBy != null">
+                and create_by = #{createBy}
+            </if>
+            <if test="reviewerId != null">
+                and reviewer_id = #{reviewerId}
+            </if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                AND date_format(create_date,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                AND date_format(create_date,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="examId" useGeneratedKeys="true">
+        insert into exam(
+        <if test="examName != null and examName != ''">exam_name,</if>
+        <if test="examStartDate != null">exam_start_date,</if>
+        <if test="examLastTime != null and examLastTime != ''">exam_last_time,</if>
+        <if test="reviewerId != null and reviewerId != ''">reviewer_id,</if>
+        <if test="createBy != null and createBy != ''">create_by,</if>
+        <if test="score != null and score != ''">score,</if>
+        create_date
+        )values(
+        <if test="examName != null and examName != ''">#{examName},</if>
+        <if test="examStartDate != null ">#{examStartDate},</if>
+        <if test="examLastTime != null and examLastTime != ''">#{examLastTime},</if>
+        <if test="reviewerId != null and reviewerId != ''">#{reviewerId},</if>
+        <if test="createBy != null and createBy != ''">#{create_by},</if>
+        <if test="score != null and score != ''">#{score},</if>
+        sysdate()
+        )
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update my_exam_test.exam
+        <set>
+            <if test="examName != null and examName != ''">
+                exam_name = #{examName},
+            </if>
+            <if test="examStartDate != null">
+                exam_start_date = #{examStartDate},
+            </if>
+            <if test="examLastTime != null">
+                exam_last_time = #{examLastTime},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="score != null">
+                score = #{score},
+            </if>
+            update_date = sysdate()
+        </set>
+        where exam_id = #{examId}
+    </update>
+    <update id="updateScoreById">
+        update exam set score=#{score} where exam_id=#{examId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from exam where exam_id = #{examId}
+    </delete>
+    <delete id="deleteByIds">
+        delete from exam where exam_id in
+        <foreach collection="array" item="id" separator="," close=")" open="(">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

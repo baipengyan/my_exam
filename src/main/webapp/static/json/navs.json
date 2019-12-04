@@ -1,0 +1,64 @@
+{
+  "contentManagement": [
+    {
+      "title": "在线考试",
+      "icon": "icon-text",
+      "href": "/exam/student",
+      "spread": false
+    }
+  ],
+  "memberCenter": [
+    {
+      "title": "试卷管理",
+      "icon": "&#xe612;",
+      "href": "/onlineExam/exam",
+      "spread": false
+    },
+    {
+      "title": "试题管理",
+      "icon": "icon-vip",
+      "href": "/onlineExam/question",
+      "spread": false
+    },
+    {
+      "title": "我的判卷",
+      "icon": "icon-vip",
+      "href": "/onlineExam/review",
+      "spread": false
+    },
+    {
+      "title": "成绩管理",
+      "icon": "icon-vip",
+      "href": "/onlineExam/score",
+      "spread": false
+    }
+  ],
+  "systemeSttings": [
+    {
+      "title": "用户管理",
+      "icon": "&#xe631;",
+      "href": "system/user",
+      "spread": false
+    },
+    {
+      "title": "公告管理",
+      "icon": "&#xe631;",
+      "href": "/system/notice",
+      "spread": false
+    },
+    {
+      "title": "系统日志",
+      "icon": "icon-log",
+      "href": "/system/log",
+      "spread": false
+    },
+    {
+      "title": "Druid数据监控",
+      "icon": "icon-log",
+      "href": "/druid/index",
+      "spread": false
+    }
+  ]
+}
+
+

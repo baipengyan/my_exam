@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.dao.QuestionDao">
+
+    <resultMap type="com.exam.entity.Question" id="QuestionMap">
+        <result property="id" column="id"/>
+        <result property="type" column="type"/>
+        <result property="title" column="title"/>
+        <result property="optionA" column="option_a"/>
+        <result property="optionB" column="option_b"/>
+        <result property="optionC" column="option_c"/>
+        <result property="optionD" column="option_d"/>
+        <result property="answer" column="answer"/>
+        <result property="analyse" column="analyse"/>
+        <result property="score" column="score"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createDate" column="create_date"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateDate" column="update_date"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="QuestionMap">
+        select
+          id, type, title, option_a, option_b, option_c, option_d, answer, analyse,score,create_by,create_date,update_by,update_date
+        from question
+        where id = #{id}
+    </select>
+
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="QuestionMap">
+        select
+        id, type, title, option_a, option_b, option_c, option_d, answer, analyse,score,create_date
+        from question
+        <where>
+            <if test="type != null and type != ''">
+                and type = #{type}
+            </if>
+            <if test="title != null and title != ''">
+                and title = #{title}
+            </if>
+            <if test="analyse != null and analyse != ''">
+                and analyse = #{analyse}
+            </if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                AND date_format(create_date,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                AND date_format(create_date,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into question(
+        <if test="type != null and type != ''">type,</if>
+        <if test="title != null and title != ''">title,</if>
+        <if test="optionA != null and optionA != ''">option_a,</if>
+        <if test="optionB != null and optionB != ''">option_b,</if>
+        <if test="optionC != null and optionC != ''">option_c,</if>
+        <if test="optionD != null and optionD != ''">option_d,</if>
+        <if test="answer != null and answer != ''">answer,</if>
+        <if test="analyse != null and analyse != ''">analyse,</if>
+        <if test="createBy != null and createBy != ''">create_by,</if>
+        <if test="score != null and score != ''">score,</if>
+        create_date
+        )values(
+        <if test="type != null and type != ''">#{type},</if>
+        <if test="title != null and title != ''">#{title},</if>
+        <if test="optionA != null and optionA != ''">#{optionA},</if>
+        <if test="optionB != null and optionB != ''">#{optionB},</if>
+        <if test="optionC != null and optionC != ''">#{optionC},</if>
+        <if test="optionD != null and optionD != ''">#{optionD},</if>
+        <if test="answer != null and answer != ''">#{answer},</if>
+        <if test="analyse != null and analyse != ''">#{analyse},</if>
+        <if test="createBy != null and createBy != ''">#{createBy},</if>
+        <if test="score != null and score != ''">#{score},</if>
+        sysdate()
+        )
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update my_exam_test.question
+        <set>
+            <if test="type != null and type != ''">
+                type = #{type},
+            </if>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="optionA != null and optionA != ''">
+                option_a = #{optionA},
+            </if>
+            <if test="optionB != null and optionB != ''">
+                option_b = #{optionB},
+            </if>
+            <if test="optionC != null and optionC != ''">
+                option_c = #{optionC},
+            </if>
+            <if test="optionD != null and optionD != ''">
+                option_d = #{optionD},
+            </if>
+            <if test="answer != null and answer != ''">
+                answer = #{answer},
+            </if>
+            <if test="analyse != null and analyse != ''">
+                analyse = #{analyse},
+            </if>
+            <if test="score != null and score != ''">
+                score = #{score},
+            </if>
+            update_date = sysdate()
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from my_exam_test.question where id = #{id}
+    </delete>
+
+    <delete id="deleteByIds">
+        delete from question where id in
+        <foreach collection="array" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
